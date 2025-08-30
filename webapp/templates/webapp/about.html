@@ -1,0 +1,187 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+{% block title %}About - Community Mangrove Watch{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Page Header -->
+    <div class="page-header animated-fadein">
+        <h1>About Community Mangrove Watch</h1>
+        <p>Protecting mangrove ecosystems through community participation and technology</p>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="content-sections">
+
+        <!-- Our Mission -->
+        <section class="content-section animated-slideup">
+            <h2>Our Mission</h2>
+            <p>Community Mangrove Watch is dedicated to protecting and preserving mangrove forests through community-driven conservation efforts. We empower local communities, fishermen, and citizen scientists to actively monitor and report threats to these vital ecosystems.</p>
+        </section>
+
+        <!-- Why Mangroves Matter -->
+        <section class="content-section animated-slideup delay-1">
+            <h2>Why Mangroves Matter</h2>
+            <div class="features-grid">
+                <div class="feature-card animated-zoom">
+                    <i class="fas fa-shield-alt fa-2x"></i>
+                    <h3>Storm Protection</h3>
+                    <p>Mangroves act as natural barriers against storms, protecting coastal communities from storm surges and erosion.</p>
+                </div>
+                <div class="feature-card animated-zoom delay-1">
+                    <i class="fas fa-leaf fa-2x"></i>
+                    <h3>Carbon Storage</h3>
+                    <p>Mangrove forests store significant amounts of carbon, helping mitigate climate change effects.</p>
+                </div>
+                <div class="feature-card animated-zoom delay-2">
+                    <i class="fas fa-fish fa-2x"></i>
+                    <h3>Biodiversity</h3>
+                    <p>These ecosystems support diverse marine life and serve as nurseries for many fish species.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How We Help -->
+        <section class="content-section animated-slideup delay-2">
+            <h2>How We Help</h2>
+            <p>Our platform combines modern technology with community engagement to create an effective monitoring system:</p>
+            <ul class="help-list">
+                <li>Geotagged photo reporting for accurate location tracking</li>
+                <li>AI-assisted validation to ensure report accuracy</li>
+                <li>Satellite data integration for comprehensive monitoring</li>
+                <li>Gamification to encourage community participation</li>
+                <li>Real-time data sharing with conservation authorities</li>
+            </ul>
+        </section>
+
+    </div>
+</div>
+
+<!-- CSS Styles -->
+<style>
+.container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.page-header h1 {
+    font-size: 2.8rem;
+    color: #27ae60;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.content-section {
+    margin-bottom: 40px;
+}
+
+.content-section h2 {
+    font-size: 2rem;
+    color: #219150;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.content-section h2::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background-color: #27ae60;
+    margin-top: 5px;
+    border-radius: 2px;
+}
+
+.features-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.feature-card {
+    flex: 1 1 30%;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid #ddd;
+}
+
+.feature-card i {
+    color: #27ae60;
+    margin-bottom: 15px;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.help-list {
+    list-style: disc;
+    padding-left: 20px;
+    line-height: 1.8;
+    color: #444;
+}
+
+/* Animations */
+.animated-fadein {
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+.animated-slideup {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s forwards;
+}
+
+.animated-zoom {
+    opacity: 0;
+    transform: scale(0.8);
+    animation: zoomIn 0.8s forwards;
+}
+
+.delay-1 { animation-delay: 0.3s; }
+.delay-2 { animation-delay: 0.6s; }
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes zoomIn {
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .features-grid {
+        flex-direction: column;
+    }
+    .feature-card {
+        flex: 1 1 100%;
+    }
+}
+</style>
+
+{% endblock %}

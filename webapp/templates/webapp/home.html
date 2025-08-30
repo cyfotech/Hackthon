@@ -1,0 +1,179 @@
+{% extends 'webapp/base.html' %}
+{% block title %}Home - Community Mangrove Watch{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-container">
+        <div class="hero-content">
+            <h1 class="hero-title">Protect Our Mangroves Together</h1>
+            <p class="hero-subtitle">
+                Join our community-driven conservation effort. Report incidents, earn rewards, 
+                and help preserve vital mangrove ecosystems for future generations.
+            </p>
+            <div class="hero-buttons">
+                {% if logged_user %}
+                    <a href="{% url 'reports_list' %}" class="btn btn-primary">Submit a Report</a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-secondary">View Dashboard</a>
+                {% else %}
+                    <a href="{% url 'signup' %}" class="btn btn-primary">Get Started</a>
+                    <a href="{% url 'about' %}" class="btn btn-secondary">Learn More</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="mangrove-illustration"><i class="fas fa-seedling fa-5x"></i></div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="stat-content">
+                    <h3 class="stat-number">{{ total_reports }}</h3>
+                    <p class="stat-label">Total Reports</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-content">
+                    <h3 class="stat-number">{{ verified_reports }}</h3>
+                    <p class="stat-label">Verified Reports</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-content">
+                    <h3 class="stat-number">{{ top_contributors.count }}</h3>
+                    <p class="stat-label">Active Contributors</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-leaf"></i></div>
+                <div class="stat-content">
+                    <h3 class="stat-number">95%</h3>
+                    <p class="stat-label">Conservation Success</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-camera"></i></div>
+                <h3>Report Incidents</h3>
+                <p>Take geotagged photos and report mangrove cutting, pollution, or other threats.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                <h3>AI Validation</h3>
+                <p>Our AI system analyzes reports for accuracy and prioritizes urgent conservation actions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-trophy"></i></div>
+                <h3>Earn Rewards</h3>
+                <p>Get points for verified reports, climb the leaderboard, unlock badges, and gain recognition.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-satellite"></i></div>
+                <h3>Satellite Monitoring</h3>
+                <p>Integration with satellite data provides comprehensive monitoring of mangrove health over time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                <h3>Mobile & SMS</h3>
+                <p>Submit reports via mobile app or SMS, making conservation accessible to all community members.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Real-time Data</h3>
+                <p>Authorities get instant access to validated reports for quick response and policy decisions.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Reports -->
+{% if recent_reports %}
+<section class="recent-reports">
+    <div class="container">
+        <h2 class="section-title">Recent Verified Reports</h2>
+        <div class="reports-grid">
+            {% for report in recent_reports %}
+            <div class="report-card">
+                <div class="report-header">
+                    <span class="report-type {{ report.report_type }}">{{ report.get_report_type_display }}</span>
+                    <span class="report-date">{{ report.created_at|date:"M d, Y" }}</span>
+                </div>
+                <h4 class="report-title">{{ report.title }}</h4>
+                <p class="report-location"><i class="fas fa-map-marker-alt"></i> {{ report.location_name }}</p>
+                <p class="report-description">{{ report.description|truncatewords:15 }}</p>
+                <a href="{% url 'report_detail' report.id %}" class="view-report-btn">View Details</a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <a href="{% url 'reports_list' %}" class="btn btn-outline">View All Reports</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Top Contributors -->
+{% if top_contributors %}
+<section class="top-contributors">
+    <div class="container">
+        <h2 class="section-title">Community Leaders</h2>
+        <div class="contributors-grid">
+            {% for contributor in top_contributors %}
+            <div class="contributor-card">
+                <div class="contributor-rank">
+                    {% if forloop.counter == 1 %}
+                        <i class="fas fa-crown gold"></i>
+                    {% elif forloop.counter == 2 %}
+                        <i class="fas fa-medal silver"></i>
+                    {% else %}
+                        <i class="fas fa-award bronze"></i>
+                    {% endif %}
+                </div>
+                <div class="contributor-info">
+                    <h4>{{ contributor.user.first_name|default:contributor.user.username }}</h4>
+                    <p>{{ contributor.points }} points</p>
+                    <span class="contributor-reports">{{ contributor.reports_submitted }} reports</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center">
+            <a href="{% url 'leaderboard' %}" class="btn btn-outline">View Full Leaderboard</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Join the Conservation Movement</h2>
+            <p>Every report makes a difference. Help us protect mangroves for wildlife, communities, and climate resilience.</p>
+            {% if not logged_user %}
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-large">Sign Up Today</a>
+            {% else %}
+                <a href="{% url 'reports_list' %}" class="btn btn-primary btn-large">Submit Your First Report</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

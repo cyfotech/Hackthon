@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Community Mangrove Watch{% endblock %}</title>
+
+        <!-- Local CSS -->
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'webapp/css/reports.css' %}">
+        
+
+        <!-- Font Awesome -->
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet">
+
+        <!-- Leaflet CSS -->
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img
+                        src="https://customer-assets.emergentagent.com/job_90019663-115c-402a-a765-2f2b7ef2b0c5/artifacts/6fhs4ryz_image%20%282%29.png"
+                        alt="Community Mangrove Watch" class="logo-img">
+                    <span class="nav-title">Community Mangrove Watch</span>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="{% url 'home' %}"
+                            class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="{% url 'reports_list' %}"
+                            class="nav-link">Reports</a></li>
+                    <li class="nav-item"><a href="{% url 'leaderboard' %}"
+                            class="nav-link">Leaderboard</a></li>
+                    <li class="nav-item"><a href="{% url 'rewards' %}"
+                            class="nav-link">Rewards</a></li>
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item"><a href="{% url 'dashboard' %}"
+                            class="nav-link">Dashboard</a></li>
+                    <li class="nav-item"><a href="{% url 'submit_report' %}"
+                            class="nav-link btn-primary">Submit Report</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link">{{ user.username }} <i
+                                class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'profile' %}">Profile</a>
+                            <a href="{% url 'logout' %}">Logout</a>
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a href="{% url 'login' %}"
+                            class="nav-link">Login</a></li>
+                    <li class="nav-item"><a href="{% url 'signup' %}"
+                            class="nav-link btn-primary">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Messages -->
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+                <button class="close-alert"
+                    onclick="this.parentElement.style.display='none'">&times;</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h3>Community Mangrove Watch</h3>
+                    <p>Protecting mangrove forests through community
+                        participation and technology.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="{% url 'about' %}">About</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                        <li><a href="{% url 'reports_list' %}">Reports</a></li>
+                        <li><a
+                                href="{% url 'leaderboard' %}">Leaderboard</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i>
+                        info@mangrovewatch.org</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Community Mangrove Watch. All rights
+                    reserved.</p>
+            </div>
+        </footer>
+
+        <!-- JS Scripts -->
+        <!-- Leaflet JS -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+        <!-- Local JS -->
+        <script src="{% static 'js/app.js' %}" defer></script>
+        <script src="{% static 'js/main.js' %}" defer></script>
+        <script src="{% static 'js/main.js' %}"></script>
+        <script src="{% static 'webapp/js/reports.js' %}"></script>
+    </body>
+</html>

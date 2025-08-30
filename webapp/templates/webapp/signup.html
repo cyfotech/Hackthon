@@ -1,0 +1,120 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+{% block title %}Sign Up - Community Mangrove Watch{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-form-container">
+        <div class="auth-header">
+            <h2>Join Our Community</h2>
+            <p>Start making a difference in mangrove conservation</p>
+        </div>
+        
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name">
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+                <i class="fas fa-user input-icon"></i>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+                <i class="fas fa-envelope input-icon"></i>
+            </div>
+            
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" placeholder="City, Country" required>
+                <i class="fas fa-map-marker-alt input-icon"></i>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone_number">Phone Number (Optional)</label>
+                <input type="tel" id="phone_number" name="phone_number">
+                <i class="fas fa-phone input-icon"></i>
+            </div>
+            
+            <div class="form-group">
+                <label for="community_role">Community Role</label>
+                <select id="community_role" name="community_role" required>
+                    <option value="">Select your role</option>
+                    <option value="resident">Community Resident</option>
+                    <option value="fisherman">Fisherman</option>
+                    <option value="researcher">Researcher</option>
+                    <option value="ngo">NGO Member</option>
+                    <option value="official">Government Official</option>
+                </select>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                    <i class="fas fa-lock input-icon"></i>
+                    <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <i class="fas fa-lock input-icon"></i>
+                    <button type="button" class="toggle-password" onclick="togglePassword('confirm_password')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{% url 'login' %}">Sign in here</a></p>
+        </div>
+    </div>
+    
+    <div class="auth-image">
+        <div class="auth-illustration">
+            <i class="fas fa-users fa-6x"></i>
+            <h3>Growing Community</h3>
+            <p>Connect with fellow conservationists and make a real impact on mangrove protection.</p>
+            <div class="signup-benefits">
+                <div class="benefit-item">
+                    <i class="fas fa-check"></i>
+                    <span>Submit geotagged reports</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check"></i>
+                    <span>Earn points and rewards</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check"></i>
+                    <span>Track your impact</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check"></i>
+                    <span>Connect with community</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

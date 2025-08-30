@@ -1,0 +1,190 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+{% block title %}Leaderboard - Community Mangrove Watch{% endblock %}
+
+{% block content %}
+<div class="leaderboard-bg">
+    <div class="leaderboard-outer-container">
+        <div class="page-header">
+            <h1>Leaderboard</h1>
+            <p>Top contributors in the community</p>
+        </div>
+        <div class="leaderboard-table-wrapper">
+            <table class="reports-table leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>User</th>
+                        <th>Reports Submitted</th>
+                        <th>Verified Reports</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row-animate" style="background: #e6f7ff;">
+                        <td>🥇</td>
+                        <td><strong>alice</strong></td>
+                        <td>24</td>
+                        <td>20</td>
+                    </tr>
+                    <tr class="row-animate" style="animation-delay: 0.1s;">
+                        <td>🥈</td>
+                        <td><strong>bob</strong></td>
+                        <td>18</td>
+                        <td>15</td>
+                    </tr>
+                    <tr class="row-animate" style="animation-delay: 0.2s;">
+                        <td>🥉</td>
+                        <td><strong>charlie</strong></td>
+                        <td>15</td>
+                        <td>12</td>
+                    </tr>
+                    <tr class="row-animate" style="animation-delay: 0.3s;">
+                        <td>4</td>
+                        <td><strong>diana</strong></td>
+                        <td>10</td>
+                        <td>8</td>
+                    </tr>
+                    <tr class="row-animate" style="animation-delay: 0.4s;">
+                        <td>5</td>
+                        <td><strong>edward</strong></td>
+                        <td>7</td>
+                        <td>5</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body {
+    min-height: 100vh;
+    min-width: 100vw;
+    height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+}
+.leaderboard-bg {
+    min-height: 100vh;
+    min-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #2563eb 0%, #20c997 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+}
+.leaderboard-outer-container {
+    width: 100vw;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0;
+    background: rgba(255,255,255,0.18);
+    border-radius: 0;
+    box-shadow: 0 12px 48px rgba(30,60,114,0.18);
+    backdrop-filter: blur(16px) saturate(1.3);
+    border: 2px solid rgba(255,255,255,0.25);
+    animation: popIn 1.2s cubic-bezier(.68,-0.55,.27,1.55), floatY 5s ease-in-out infinite alternate;
+}
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    width: 100%;
+    color: #1e293b;
+    text-shadow: 0 2px 12px rgba(32,201,151,0.07);
+}
+.leaderboard-table-wrapper {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+}
+.leaderboard-table {
+    width: 100vw;
+    max-width: 100vw;
+    border-radius: 0;
+    margin: 0;
+    background: rgba(255,255,255,0.92);
+    border-spacing: 0 18px;
+}
+.leaderboard-table th, .leaderboard-table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 2.2rem 3.5rem;
+    font-size: 1.18rem;
+}
+.leaderboard-table th {
+    background: #f8f9fa;
+    font-weight: 700;
+    color: #2563eb;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #e0e7ef;
+}
+.leaderboard-table tr:first-child td {
+    font-weight: 700;
+    color: #2563eb;
+    font-size: 1.25rem;
+}
+.leaderboard-table tr:nth-child(2) td {
+    color: #20c997;
+}
+.leaderboard-table tr:nth-child(3) td {
+    color: #fd7e14;
+}
+.leaderboard-table tr {
+    transition: background 0.3s;
+}
+.leaderboard-table tr:hover {
+    background: #e3f6ff;
+}
+.row-animate {
+    opacity: 0;
+    transform: translateY(40px) scale(0.97);
+    animation: rowFadeIn 0.7s forwards;
+}
+.row-animate:nth-child(1) { animation-delay: 0s; }
+.row-animate:nth-child(2) { animation-delay: 0.1s; }
+.row-animate:nth-child(3) { animation-delay: 0.2s; }
+.row-animate:nth-child(4) { animation-delay: 0.3s; }
+.row-animate:nth-child(5) { animation-delay: 0.4s; }
+@keyframes popIn {
+    0% { opacity: 0; transform: scale(0.95);}
+    100% { opacity: 1; transform: scale(1);}
+}
+@keyframes floatY {
+    0% { transform: translateY(0);}
+    100% { transform: translateY(18px);}
+}
+@keyframes rowFadeIn {
+    0% { opacity: 0; transform: translateY(40px) scale(0.97);}
+    100% { opacity: 1; transform: translateY(0) scale(1);}
+}
+@media (max-width: 1200px) {
+    .leaderboard-outer-container {
+        padding: 24px 8px 32px 8px;
+    }
+    .leaderboard-table {
+        min-width: 0;
+        font-size: 1rem;
+    }
+    .leaderboard-table th, .leaderboard-table td {
+        padding: 1rem 0.5rem;
+    }
+}
+@media (max-width: 700px) {
+    .leaderboard-table {
+        min-width: 0;
+        font-size: 0.93rem;
+    }
+    .leaderboard-outer-container {
+        padding: 0 2vw 20px 2vw;
+    }
+}
+</style>

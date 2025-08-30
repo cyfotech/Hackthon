@@ -1,0 +1,186 @@
+
+{% extends 'webapp/base.html' %}
+{% load static %}
+{% block title %}Dashboard - Community Mangrove Watch{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Welcome back, {{ user.first_name|default:user.username }}!</h1>
+        <p>Your contribution to mangrove conservation</p>
+    </div>
+
+    <!-- Dashboard Stats -->
+    <div class="dashboard-stats">
+        <div class="stat-card primary">
+            <div class="stat-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ user_profile.points }}</h3>
+                <p>Total Points</p>
+            </div>
+        </div>
+
+        <div class="stat-card success">
+            <div class="stat-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ leaderboard_position.reports_submitted }}</h3>
+                <p>Reports Submitted</p>
+            </div>
+        </div>
+
+        <div class="stat-card warning">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ leaderboard_position.reports_verified }}</h3>
+                <p>Reports Verified</p>
+            </div>
+        </div>
+
+        <div class="stat-card info">
+            <div class="stat-icon">
+                <i class="fas fa-ranking-star"></i>
+            </div>
+            <div class="stat-content">
+                <h3>#{{ leaderboard_position.rank|default:"--" }}</h3>
+                <p>Global Rank</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="actions-grid">
+            <a href="{% url 'submit_report' %}" class="action-card primary">
+                <i class="fas fa-plus-circle"></i>
+                <h3>Submit Report</h3>
+                <p>Report a new incident or observation</p>
+            </a>
+
+            <a href="{% url 'reports_list' %}" class="action-card secondary">
+                <i class="fas fa-list"></i>
+                <h3>View Reports</h3>
+                <p>Browse all community reports</p>
+            </a>
+
+            <a href="{% url 'leaderboard' %}" class="action-card tertiary">
+                <i class="fas fa-trophy"></i>
+                <h3>Leaderboard</h3>
+                <p>See top contributors</p>
+            </a>
+
+            <a href="{% url 'rewards' %}" class="action-card quaternary">
+                <i class="fas fa-gift"></i>
+                <h3>Rewards</h3>
+                <p>View available rewards</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Reports -->
+    {% if user_reports %}
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Your Recent Reports</h2>
+            <a href="{% url 'reports_list' %}?user={{ user.username }}"
+                class="view-all-btn">View All</a>
+        </div>
+
+        <div class="reports-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in user_reports %}
+                    <tr>
+                        <td>{{ report.title }}</td>
+                        <td>
+                            <span
+                                class="report-type-badge {{ report.report_type }}">
+                                {{ report.get_report_type_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-badge {{ report.status }}">
+                                {{ report.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ report.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'report_detail' report.id %}"
+                                class="btn btn-sm btn-outline">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recent Rewards -->
+    {% if user_rewards %}
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Recent Achievements</h2>
+            <a href="{% url 'rewards' %}" class="view-all-btn">View All
+                Rewards</a>
+        </div>
+
+        <div class="rewards-grid">
+            {% for user_reward in user_rewards|slice:":3" %}
+            <div class="reward-card earned">
+                <div class="reward-icon">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div class="reward-info">
+                    <h4>{{ user_reward.reward.name }}</h4>
+                    <p>{{ user_reward.reward.description }}</p>
+                    <span class="earned-date">Earned {{
+                        user_reward.earned_at|date:"M d, Y" }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Profile Summary -->
+    <div class="dashboard-section">
+        <div class="profile-summary">
+            <h2>Profile Summary</h2>
+            <div class="profile-info">
+                <div class="profile-detail">
+                    <strong>Location:</strong> {{ user_profile.location }}
+                </div>
+                <div class="profile-detail">
+                    <strong>Role:</strong> {{
+                    user_profile.get_community_role_display }}
+                </div>
+                <div class="profile-detail">
+                    <strong>Member Since:</strong> {{
+                    user.date_joined|date:"M Y" }}
+                </div>
+                <div class="profile-detail">
+                    <strong>Email:</strong> {{ user.email }}
+                </div>
+            </div>
+            <a href="{% url 'profile' %}" class="btn btn-outline">Edit
+                Profile</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

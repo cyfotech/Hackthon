@@ -1,0 +1,143 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+{% block title %}{{ report.title }} - Community Mangrove Watch{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="report-detail">
+        <div class="report-header">
+            <h1>{{ report.title }}</h1>
+            <div class="report-badges">
+                <span class="report-type-badge {{ report.report_type }}">{{
+                    report.get_report_type_display }}</span>
+                <span class="status-badge {{ report.status }}">{{
+                    report.get_status_display }}</span>
+            </div>
+        </div>
+
+        <div class="report-content">
+            <div class="report-main">
+                <div class="report-section">
+                    <h3>Description</h3>
+                    <p>{{ report.description }}</p>
+                </div>
+
+                {% if report.image1 or report.image2 or report.image3 %}
+                <div class="report-section">
+                    <h3>Images</h3>
+                    <div class="report-images">
+                        {% if report.image1 %}
+                        <img src="{{ report.image1.url }}" alt="Report Image 1"
+                            class="report-image">
+                        {% endif %}
+                        {% if report.image2 %}
+                        <img src="{{ report.image2.url }}" alt="Report Image 2"
+                            class="report-image">
+                        {% endif %}
+                        {% if report.image3 %}
+                        <img src="{{ report.image3.url }}" alt="Report Image 3"
+                            class="report-image">
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if report.ai_confidence_score %}
+                <div class="report-section">
+                    <h3>AI Validation</h3>
+                    <div class="ai-validation">
+                        <div class="confidence-score">
+                            <span class="label">Confidence Score:</span>
+                            <span class="score">{{
+                                report.ai_confidence_score|floatformat:2
+                                }}%</span>
+                        </div>
+                        {% if report.ai_validation_notes %}
+                        <p class="validation-notes">{{
+                            report.ai_validation_notes }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="report-sidebar">
+                <div class="report-meta-card">
+                    <h3>Report Details</h3>
+                    <div class="meta-item">
+                        <strong>Reporter:</strong>
+                        <span>{{
+                            report.reporter.first_name|default:report.reporter.username
+                            }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <strong>Location:</strong>
+                        <span>{{ report.location_name }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <strong>Coordinates:</strong>
+                        <span>{{ report.latitude }}, {{ report.longitude
+                            }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <strong>Reported:</strong>
+                        <span>{{ report.created_at|date:"F d, Y \a\t H:i"
+                            }}</span>
+                    </div>
+                    {% if report.verified_at %}
+                    <div class="meta-item">
+                        <strong>Verified:</strong>
+                        <span>{{ report.verified_at|date:"F d, Y \a\t H:i"
+                            }}</span>
+                    </div>
+                    {% endif %}
+                    {% if report.verified_by %}
+                    <div class="meta-item">
+                        <strong>Verified By:</strong>
+                        <span>{{ report.verified_by.username }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="location-map">
+                    <h3>Location</h3>
+                    <div id="report-map"
+                        style="height: 300px; border-radius: 8px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-actions">
+            <a href="{% url 'reports_list' %}" class="btn btn-secondary">Back to
+                Reports</a>
+            {% if user == report.reporter %}
+            <a href="#" class="btn btn-outline">Edit Report</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof L !== 'undefined') {
+        const lat = parseFloat("{{ report.latitude|escapejs }}");
+        const lng = parseFloat("{{ report.longitude|escapejs }}");
+        const title = "{{ report.title|escapejs }}";
+        const locationName = "{{ report.location_name|escapejs }}";
+
+        if (!isNaN(lat) && !isNaN(lng)) {
+            const map = L.map('report-map').setView([lat, lng], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            L.marker([lat, lng])
+                .addTo(map)
+                .bindPopup(title + "<br>" + locationName)
+                .openPopup();
+        }
+    }
+});
+</script>
+
+{% endblock %}

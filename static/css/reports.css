@@ -1,0 +1,199 @@
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 16px;
+}
+.page-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+.reports-filters {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+.filter-form {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.filter-group select,
+.search-group input {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    font-size: 1rem;
+    background: #fff;
+    color: #333;
+}
+.search-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+.report-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(30,60,114,0.07);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e9ecef;
+}
+.report-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 6px 24px rgba(30,60,114,0.13);
+}
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.report-type {
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #fff;
+    background: #20c997;
+}
+.report-type.cutting { background: #dc3545; }
+.report-type.dumping { background: #fd7e14; }
+.report-type.reclamation { background: #6f42c1; }
+.report-type.damage { background: #20c997; }
+.report-type.restoration { background: #28a745; }
+.status-badge {
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #fff;
+    background: #adb5bd;
+}
+.status-badge.verified { background: #28a745; }
+.status-badge.pending { background: #ffc107; color: #000; }
+.status-badge.investigating { background: #17a2b8; }
+.status-badge.resolved { background: #6c757d; }
+.report-location {
+    color: #6c757d;
+    font-size: 0.97rem;
+}
+.report-description {
+    color: #495057;
+    font-size: 1rem;
+}
+.report-meta {
+    display: flex;
+    justify-content: space-between;
+    color: #adb5bd;
+    font-size: 0.93rem;
+}
+.btn {
+    padding: 7px 18px;
+    border-radius: 6px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+.btn-outline {
+    background: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-outline:hover {
+    background: #007bff;
+    color: #fff;
+}
+.btn-sm {
+    font-size: 0.95rem;
+    padding: 5px 14px;
+}
+.mt-3 { margin-top: 18px; }
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+}
+.pagination {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.pagination a {
+    color: #2563eb;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    transition: background 0.2s;
+}
+.pagination a:hover {
+    background: #2563eb;
+    color: #fff;
+}
+.current-page {
+    font-weight: 600;
+    color: #334155;
+}
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(30,60,114,0.07);
+    margin: 40px 0;
+    padding: 40px 20px;
+    text-align: center;
+    animation: fadeIn 1s;
+}
+.empty-state i {
+    color: #adb5bd;
+    margin-bottom: 18px;
+    transition: transform 0.4s;
+}
+.empty-state:hover i {
+    transform: scale(1.1) rotate(-8deg);
+}
+.empty-state h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+.empty-state p {
+    color: #666;
+    margin-bottom: 18px;
+}
+.animated-fadein {
+    animation: fadeIn 1s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+/* Responsive for reports */
+@media (max-width: 768px) {
+    .reports-grid {
+        grid-template-columns: 1fr;
+    }
+    .filter-form {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
