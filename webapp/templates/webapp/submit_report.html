@@ -1,0 +1,148 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+{% block title %}Submit Report - Community Mangrove Watch{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-container animated-fadein">
+        <h1>Submit a Report</h1>
+        <p class="subtitle">Help protect mangroves by reporting incidents</p>
+        <form method="post" enctype="multipart/form-data" class="report-form">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Report Title" required>
+            <textarea name="description" placeholder="Description" required></textarea>
+            <div class="geo-fields">
+                <input type="text" name="geotag_lat" placeholder="Latitude" required>
+                <input type="text" name="geotag_lng" placeholder="Longitude" required>
+            </div>
+            <select name="report_type" required>
+                <option value="">Select Type</option>
+                <option value="cutting">Illegal Cutting</option>
+                <option value="dumping">Pollution/Dumping</option>
+                <option value="reclamation">Land Reclamation</option>
+                <option value="damage">Storm Damage</option>
+                <option value="restoration">Restoration</option>
+            </select>
+            <input type="file" name="image" required>
+            <button type="submit" class="btn-submit">Submit Report</button>
+        </form>
+    </div>
+</div>
+
+<!-- Styles -->
+<style>
+/* Container */
+.container {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Form container */
+.form-container {
+    background: #f4f9f4;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    animation: fadeIn 1s ease forwards;
+}
+
+/* Heading */
+.form-container h1 {
+    text-align: center;
+    color: #27ae60;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #555;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+/* Form */
+.report-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.report-form input[type="text"],
+.report-form textarea,
+.report-form select,
+.report-form input[type="file"] {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+}
+
+.report-form input:focus,
+.report-form textarea:focus,
+.report-form select:focus,
+.report-form input[type="file"]:focus {
+    outline: none;
+    border-color: #27ae60;
+    box-shadow: 0 0 5px rgba(39, 174, 96, 0.4);
+}
+
+/* Geo fields in row */
+.geo-fields {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.geo-fields input {
+    flex: 1;
+}
+
+/* Button */
+.btn-submit {
+    padding: 15px;
+    background-color: #27ae60;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #219150;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+/* Animations */
+.animated-fadein {
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+/* Responsive */
+@media(max-width: 500px){
+    .geo-fields {
+        flex-direction: column;
+    }
+}
+</style>
+
+<!-- JS Animation Example -->
+<script>
+// Smooth hover animation for form inputs
+document.querySelectorAll('.report-form input, .report-form textarea, .report-form select').forEach(el => {
+    el.addEventListener('mouseenter', () => el.style.transform = 'scale(1.02)');
+    el.addEventListener('mouseleave', () => el.style.transform = 'scale(1)');
+});
+</script>
+{% endblock %}

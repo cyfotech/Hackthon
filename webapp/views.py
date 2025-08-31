@@ -342,3 +342,35 @@ def claim_reward(request, reward_id):
     return redirect('rewards')  # or wherever you want to redirect
 
 
+# webapp/views.py
+import os
+from django.shortcuts import render, redirect
+from .models import Report
+from .ml_model.predict import predict_report
+
+def submit_report(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        description = request.POST['description']
+        report_type = request.POST['report_type']
+        uploaded_file = request.FILES['image']
+
+        file_path = os.path.join('media/reports/', uploaded_file.name)
+        with open(file_path, 'wb+') as f:
+            for chunk in uploaded_file.chunks():
+                f.write(chunk)
+
+        predicted_type = predict_report(file_path)
+        status = 'verified' if predicted_type == report_type else 'pending_review'
+
+        Report.objects.create(
+            title=title,
+            description=description,
+            report_type=report_type,
+            predicted_report_type=predicted_type,
+            status=status,
+            image=uploaded_file
+        )
+        return redirect('reports_list')
+
+    return render(request, 'webapp/submit_report.html')
