@@ -42,7 +42,7 @@ def home_view(request):
     verified_reports = Report.objects.filter(status='verified').count()
     top_contributors = Leaderboard.objects.order_by('-points')[:3]
 
-    # ✅ Pass logged_user into context (for base.html navbar also)
+    # ✅ Pass logged_user to template
     context = {
         "logged_user": logged_user,
         "recent_reports": recent_reports,

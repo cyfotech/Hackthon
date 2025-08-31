@@ -17,41 +17,39 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <img src="https://customer-assets.emergentagent.com/job_90019663-115c-402a-a765-2f2b7ef2b0c5/artifacts/6fhs4ryz_image%20%282%29.png"
-                     alt="Community Mangrove Watch" class="logo-img">
-                <span class="nav-title">Community Mangrove Watch</span>
-            </div>
-            <ul class="nav-menu">
-    <li class="nav-item"><a href="{% url 'home' %}" class="nav-link">Home</a></li>
-    <li class="nav-item"><a href="{% url 'reports_list' %}" class="nav-link">Reports</a></li>
-    <li class="nav-item"><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
-    <li class="nav-item"><a href="{% url 'rewards' %}" class="nav-link">Rewards</a></li>
-
-    {% if user.is_authenticated %}
-        <!-- When logged in -->
-        <li class="nav-item"><a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a></li>
-        <li class="nav-item"><a href="{% url 'submit_report' %}" class="nav-link btn-primary">Submit Report</a></li>
-        <li class="nav-item">
-            <a href="{% url 'logout' %}" class="nav-link btn-outline">Logout</a>
-        </li>
-    {% else %}
-        <!-- When not logged in -->
-        <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Login</a></li>
-        <li class="nav-item"><a href="{% url 'signup' %}" class="nav-link btn-primary">Sign Up</a></li>
-    {% endif %}
-</ul>
-
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-logo">
+            <img src="https://customer-assets.emergentagent.com/job_90019663-115c-402a-a765-2f2b7ef2b0c5/artifacts/6fhs4ryz_image%20%282%29.png"
+                 alt="Community Mangrove Watch" class="logo-img">
+            <span class="nav-title">Community Mangrove Watch</span>
         </div>
-    </nav>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+            <li class="nav-item"><a href="{% url 'reports_list' %}" class="nav-link">Reports</a></li>
+            <li class="nav-item"><a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a></li>
+            <li class="nav-item"><a href="{% url 'rewards' %}" class="nav-link">Rewards</a></li>
+
+
+            {% if logged_user %}
+                <!-- Show when logged in -->        
+                <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link btn-outline">Logout</a></li>
+            {% else %}
+                <!-- Show when NOT logged in -->
+                <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Login</a></li>
+                <li class="nav-item"><a href="{% url 'signup' %}" class="nav-link btn-primary">Sign Up</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </div>
+</nav>
+
 
     <!-- Messages -->
     {% if messages %}

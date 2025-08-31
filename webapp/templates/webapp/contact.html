@@ -1,62 +1,255 @@
-
 {% extends 'webapp/base.html' %}
 {% load static %}
 {% block title %}Contact - Community Mangrove Watch{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="page-header">
-        <h1>Contact Us</h1>
-        <p>Get in touch with our team</p>
-    </div>
-
-    <div class="contact-content">
-        <div class="contact-info">
-            <h2>Get In Touch</h2>
-            <div class="contact-item">
-                <i class="fas fa-envelope"></i>
-                <div>
-                    <h4>Email</h4>
-                    <p>info@mangrovewatch.org</p>
-                </div>
-            </div>
-            <div class="contact-item">
-                <i class="fas fa-phone"></i>
-                <div>
-                    <h4>Phone</h4>
-                    <p>+1 (555) 123-4567</p>
-                </div>
-            </div>
-            <div class="contact-item">
-                <i class="fas fa-map-marker-alt"></i>
-                <div>
-                    <h4>Address</h4>
-                    <p>123 Conservation Way<br>Coastal City, CC 12345</p>
-                </div>
-            </div>
+<div class="contact-bg">
+    <div class="contact-container">
+        <!-- Header -->
+        <div class="page-header fade-in">
+            <h1>Contact Us</h1>
+            <p>We’d love to hear from you 🌱</p>
         </div>
 
-        <form class="contact-form">
-            <h2>Send Message</h2>
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
+        <div class="contact-content">
+            <!-- Contact Info -->
+            <div class="contact-info slide-left">
+                <h2>Get In Touch</h2>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <h4>Email</h4>
+                        <p><a href="mailto:info@mangrovewatch.org">info@mangrovewatch.org</a></p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <h4>Phone</h4>
+                        <p><a href="tel:+15551234567">+1 (555) 123-4567</a></p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>Address</h4>
+                        <p>123 Conservation Way<br>Coastal City, CC 12345</p>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="subject">Subject</label>
-                <input type="text" id="subject" name="subject" required>
-            </div>
-            <div class="form-group">
-                <label for="message">Message</label>
-                <textarea id="message" name="message" rows="5"
-                    required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Send Message</button>
-        </form>
+
+            <!-- Contact Form -->
+            <form class="contact-form slide-right" id="contactForm">
+                <h2>Send Message</h2>
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="example@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" placeholder="Enter subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Write your message here..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+                <p class="form-status" id="formStatus"></p>
+            </form>
+        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Background */
+.contact-bg {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #20c997 0%, #2563eb 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 20px;
+}
+
+/* Main container */
+.contact-container {
+    background: #fff;
+    padding: 50px;
+    border-radius: 20px;
+    max-width: 1100px;
+    width: 100%;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    animation: popIn 0.8s ease;
+}
+
+/* Header */
+.page-header {
+    text-align: center;
+    color: #1e293b;
+}
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.page-header p {
+    font-size: 1.1rem;
+    color: #475569;
+}
+
+/* Layout */
+.contact-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+/* Contact info */
+.contact-info {
+    flex: 1;
+    min-width: 280px;
+}
+.contact-info h2 {
+    margin-bottom: 25px;
+    color: #2563eb;
+    font-size: 1.5rem;
+}
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+.contact-item i {
+    font-size: 1.6rem;
+    color: #20c997;
+    margin-top: 4px;
+}
+.contact-item h4 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #1e293b;
+}
+.contact-item p, .contact-item a {
+    font-size: 0.95rem;
+    color: #475569;
+    text-decoration: none;
+}
+
+/* Contact form */
+.contact-form {
+    flex: 1;
+    min-width: 320px;
+}
+.contact-form h2 {
+    margin-bottom: 25px;
+    color: #20c997;
+    font-size: 1.5rem;
+}
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1e293b;
+}
+.form-group input, 
+.form-group textarea {
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+.form-group input:focus, 
+.form-group textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 6px rgba(37,99,235,0.3);
+    outline: none;
+}
+
+/* Button */
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+    padding: 14px 26px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s, transform 0.1s;
+}
+.btn-primary:hover {
+    background: #20c997;
+    transform: scale(1.02);
+}
+
+/* Status message */
+.form-status {
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Animations */
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.fade-in { animation: fadeIn 1s ease forwards; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.slide-left { animation: slideLeft 1s ease forwards; }
+@keyframes slideLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.slide-right { animation: slideRight 1s ease forwards; }
+@keyframes slideRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contact-content {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const status = document.getElementById("formStatus");
+    status.textContent = "Sending...";
+    status.style.color = "#2563eb";
+
+    // Fake send animation (replace with AJAX or backend later)
+    setTimeout(() => {
+        status.textContent = "Message sent successfully ✅";
+        status.style.color = "#20c997";
+        document.getElementById("contactForm").reset();
+    }, 1500);
+});
+</script>
 {% endblock %}

@@ -1,131 +1,211 @@
 {% extends 'webapp/base.html' %}
 {% load static %}
-{% block title %}Submit & View Reports - Community Mangrove Watch{% endblock %}
+{% block title %}Rewards - Community Mangrove Watch{% endblock %}
 
 {% block content %}
-<div class="container">
-
-    <!-- Submit Report Form -->
-    <section class="submit-report-section">
-        <h1>Submit a Report</h1>
-        <form method="post" action="#" class="report-form">
-            {% csrf_token %}
-            <input type="text" name="title" placeholder="Report Title" required>
-            <textarea name="description" placeholder="Description" required></textarea>
-            <input type="text" name="geotag_lat" placeholder="Latitude" required>
-            <input type="text" name="geotag_lng" placeholder="Longitude" required>
-            <select name="report_type" required>
-                <option value="">Select Report Type</option>
-                <option value="cutting">Illegal Cutting</option>
-                <option value="dumping">Pollution/Dumping</option>
-                <option value="reclamation">Land Reclamation</option>
-                <option value="damage">Storm Damage</option>
-                <option value="restoration">Restoration</option>
-            </select>
-            <button type="submit" class="btn btn-primary">Submit Report</button>
-        </form>
-    </section>
-
-    <!-- Divider -->
-    <hr class="divider">
-
-    <!-- Reports List Section -->
-    <section class="reports-list-section">
-        <h2>Community Reports</h2>
-
-        <div class="reports-filters">
-            <form method="get" class="filter-form">
-                <select name="status" disabled>
-                    <option>All Status</option>
-                </select>
-
-                <select name="type" disabled>
-                    <option>All Types</option>
-                </select>
-
-                <input type="text" name="search" placeholder="Search reports..." disabled>
-                <button type="submit" class="btn btn-primary" disabled>Search</button>
-            </form>
+<div class="rewards-bg">
+    <div class="rewards-outer-container">
+        <div class="page-header">
+            <h1>Rewards</h1>
+            <p>Earn rewards for your contributions!</p>
         </div>
 
-        <div class="reports-grid">
-            <!-- Static Report 1 -->
-            <div class="report-card">
-                <div class="report-header">
-                    <span class="report-type cutting">Illegal Cutting</span>
-                    <span class="status-badge pending">Pending</span>
-                </div>
-                <h3>Mangrove Trees Cut Near River</h3>
-                <p class="report-location"><i class="fas fa-map-marker-alt"></i> Riverside Park</p>
-                <p class="report-description">Some mangrove trees were illegally cut near the river bank by unknown persons.</p>
-                <div class="report-meta">
-                    <span class="reporter">By JohnDoe</span>
-                    <span class="date">Aug 30, 2025</span>
-                </div>
-                <a href="#" class="btn btn-outline btn-sm">View Details</a>
-            </div>
-
-            <!-- Static Report 2 -->
-            <div class="report-card">
-                <div class="report-header">
-                    <span class="report-type dumping">Pollution/Dumping</span>
-                    <span class="status-badge verified">Verified</span>
-                </div>
-                <h3>Illegal Waste Dumping</h3>
-                <p class="report-location"><i class="fas fa-map-marker-alt"></i> East Shore</p>
-                <p class="report-description">Construction waste was dumped near the mangrove area, causing pollution.</p>
-                <div class="report-meta">
-                    <span class="reporter">By JaneSmith</span>
-                    <span class="date">Aug 28, 2025</span>
-                </div>
-                <a href="#" class="btn btn-outline btn-sm">View Details</a>
-            </div>
-
-            <!-- Static Report 3 -->
-            <div class="report-card">
-                <div class="report-header">
-                    <span class="report-type restoration">Restoration</span>
-                    <span class="status-badge resolved">Resolved</span>
-                </div>
-                <h3>Mangrove Replanting Activity</h3>
-                <p class="report-location"><i class="fas fa-map-marker-alt"></i> Green Park</p>
-                <p class="report-description">Community members replanted mangroves that were previously damaged by storms.</p>
-                <div class="report-meta">
-                    <span class="reporter">By EcoWarrior</span>
-                    <span class="date">Aug 25, 2025</span>
-                </div>
-                <a href="#" class="btn btn-outline btn-sm">View Details</a>
-            </div>
+        <!-- Rewards Table -->
+        <div class="rewards-table-wrapper">
+            <table class="reports-table rewards-table">
+                <thead>
+                    <tr>
+                        <th>Reward</th>
+                        <th>Description</th>
+                        <th>Points Required</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reward in rewards %}
+                    <tr class="row-animate" style="animation-delay: {{ forloop.counter0|add:"0.1"|floatformat:1 }}s;">
+                        <td>{{ reward.name }}</td>
+                        <td>{{ reward.description }}</td>
+                        <td>{{ reward.points_required }}</td>
+                        <td>
+                            {% if user.points >= reward.points_required %}
+                                <a href="{% url 'claim_reward' reward.reward_id %}" class="reward-btn available">Claim</a>
+                            {% else %}
+                                <span class="reward-btn claimed">Not enough points</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No rewards available at the moment.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </section>
+
+        <!-- Extra reward cards (if you want a card style below the table) -->
+        <div class="rewards-card-grid">
+            {% for reward in rewards %}
+              <div class="reward-card">
+                  <h3>{{ reward.name }}</h3>
+                  <p>{{ reward.description }}</p>
+                  <p>Points required: {{ reward.points_required }}</p>
+                  {% if user.points >= reward.points_required %}
+                      <a href="{% url 'claim_reward' reward.reward_id %}" class="btn btn-primary">Claim</a>
+                  {% else %}
+                      <span class="btn btn-secondary">Not enough points</span>
+                  {% endif %}
+              </div>
+            {% endfor %}
+        </div>
+
+        <!-- Links -->
+        <div class="rewards-links">
+            <a href="{% url 'leaderboard' %}" class="btn btn-outline">View Leaderboard</a>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+        </div>
+    </div>
 </div>
-
-<!-- Styles -->
-<style>
-.container { max-width: 900px; margin: 50px auto; padding: 20px; font-family: Arial, sans-serif; }
-.report-form { display: flex; flex-direction: column; gap: 15px; margin-bottom: 50px; }
-.report-form input, .report-form textarea, .report-form select { padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
-.report-form button { padding: 12px; font-size: 16px; background-color: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-.report-form button:hover { background-color: #219150; }
-.divider { border: 1px solid #ddd; margin: 40px 0; }
-.reports-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-.report-card { padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; transition: transform 0.3s; }
-.report-card:hover { transform: scale(1.03); }
-.report-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; }
-.status-badge.pending { color: orange; }
-.status-badge.verified { color: green; }
-.status-badge.resolved { color: blue; }
-.btn-outline { border: 1px solid #27ae60; padding: 10px 15px; color: #27ae60; text-decoration: none; border-radius: 5px; display: inline-block; }
-.btn-outline:hover { background-color: #27ae60; color: white; }
-.empty-state { text-align: center; margin-top: 40px; }
-</style>
-
-<!-- JS Animations -->
-<script>
-document.querySelectorAll('.report-card').forEach(card => {
-    card.addEventListener('mouseenter', () => card.style.transform = 'scale(1.05)');
-    card.addEventListener('mouseleave', () => card.style.transform = 'scale(1)');
-});
-</script>
-
 {% endblock %}
+
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body {
+    min-height: 100vh;
+    min-width: 100vw;
+    height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+}
+.rewards-bg {
+    min-height: 100vh;
+    min-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #2563eb 0%, #20c997 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.rewards-outer-container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 48px auto;
+    padding: 48px 32px 56px 32px;
+    background: rgba(255,255,255,0.96);
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(30,60,114,0.18);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(10px) saturate(1.2);
+    animation: popIn 1s cubic-bezier(.68,-0.55,.27,1.55), floatY 5s ease-in-out infinite alternate;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    width: 100%;
+    color: #1e293b;
+    text-shadow: 0 2px 12px rgba(32,201,151,0.07);
+}
+.rewards-table-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.rewards-table {
+    width: 100%;
+    min-width: 1100px;
+    max-width: 1400px;
+    margin: 0 auto;
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.92);
+    animation: popIn 0.8s cubic-bezier(.68,-0.55,.27,1.55);
+    box-shadow: 0 4px 24px rgba(30,60,114,0.10);
+    border-spacing: 0 18px;
+}
+.rewards-table th, .rewards-table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 2.2rem 3.5rem;
+    font-size: 1.18rem;
+}
+.rewards-table th {
+    background: #f8f9fa;
+    font-weight: 700;
+    color: #2563eb;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #e0e7ef;
+}
+.rewards-table tr {
+    transition: background 0.3s;
+}
+.rewards-table tr:hover {
+    background: #e3f6ff;
+}
+.reward-btn {
+    display: inline-block;
+    padding: 0.5em 1.2em;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+}
+.reward-btn.available {
+    background: #20c997;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+.reward-btn.available:hover {
+    background: #2563eb;
+    color: #fff;
+}
+.reward-btn.claimed {
+    background: #e0e7ef;
+    color: #888;
+    cursor: not-allowed;
+}
+.rewards-links {
+    margin-top: 32px;
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+}
+.reward-card {
+    margin: 1rem;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s;
+}
+.reward-card:hover {
+    transform: translateY(-5px);
+}
+@keyframes popIn {
+    0% { opacity: 0; transform: scale(0.95);}
+    100% { opacity: 1; transform: scale(1);}
+}
+@keyframes floatY {
+    0% { transform: translateY(0);}
+    100% { transform: translateY(18px);}
+}
+</style>
