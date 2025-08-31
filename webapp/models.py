@@ -43,16 +43,18 @@ class UserProfile(models.Model):
 
 
 # ----------------------------
-# Report
+# Report (merged into one)
 # ----------------------------
 class Report(models.Model):
     report_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    report_type = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reports")
+    title = models.CharField(max_length=255)
     description = models.TextField()
-    photo_url = models.CharField(max_length=255)
-    geotag_lat = models.FloatField()
-    geotag_long = models.FloatField()
+    report_type = models.CharField(max_length=100)  # manual category
+    predicted_report_type = models.CharField(max_length=100, null=True, blank=True)  # ML prediction
+    image = models.ImageField(upload_to='reports/', null=True, blank=True)
+    geotag_lat = models.FloatField(null=True, blank=True)
+    geotag_long = models.FloatField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     STATUS_CHOICES = [
@@ -64,9 +66,10 @@ class Report(models.Model):
 
     class Meta:
         db_table = 'report'
-        verbose_name = 'Report'
-        verbose_name_plural = 'Reports'
         ordering = ['-timestamp']
+
+    def __str__(self):
+        return self.title
 
 
 # ----------------------------
@@ -84,6 +87,7 @@ class Leaderboard(models.Model):
     def __str__(self):
         return f"{self.user.name} - {self.points} pts"
 
+
 # ----------------------------
 # Reward
 # ----------------------------
@@ -100,7 +104,6 @@ class Reward(models.Model):
     def __str__(self):
         return self.title
 
-    # helper to check if a user already claimed it
     def is_claimed_by(self, user):
         return self.claimed_rewards.filter(user=user).exists()
 
@@ -116,20 +119,7 @@ class UserReward(models.Model):
 
     class Meta:
         db_table = "user_rewards"
-        unique_together = ("user", "reward")  # prevent claiming same reward twice
+        unique_together = ("user", "reward")
 
     def __str__(self):
         return f"{self.user.name} claimed {self.reward.title}"
-
-
-# webapp/models.py
-from django.db import models
-
-class Report(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    report_type = models.CharField(max_length=50)
-    predicted_report_type = models.CharField(max_length=50, null=True)
-    status = models.CharField(max_length=50, default='pending')
-    image = models.ImageField(upload_to='reports/')
-    timestamp = models.DateTimeField(auto_now_add=True)

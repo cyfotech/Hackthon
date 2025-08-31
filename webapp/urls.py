@@ -13,7 +13,7 @@ urlpatterns = [
      path('claim/<int:reward_id>/', views.claim_reward, name='claim_reward'),
     path('leaderboard/', views.leaderboard_view, name='leaderboard'),
     path("password-reset/", views.password_reset_view, name="password_reset"),
-
+  path("submit-report/", views.submit_report, name="submit_report"),
     path('rewards/', views.rewards_view, name='rewards'),
     path('profile/', views.profile_view, name='profile'),
 

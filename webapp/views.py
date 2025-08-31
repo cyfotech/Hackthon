@@ -28,28 +28,31 @@ from .models import User, Report, Leaderboard
 
 def home_view(request):
     # Get user from cookie
-    logged_user = None
     user_id = request.COOKIES.get("user_id")  # cookie set during login
+    logged_user = None
     if user_id:
         try:
             logged_user = User.objects.get(user_id=user_id)
         except User.DoesNotExist:
             logged_user = None
 
+    # Reports data
     recent_reports = Report.objects.filter(status='verified').order_by('-timestamp')[:5]
     total_reports = Report.objects.count()
     verified_reports = Report.objects.filter(status='verified').count()
     top_contributors = Leaderboard.objects.order_by('-points')[:3]
 
+    # ✅ Pass logged_user into context (for base.html navbar also)
     context = {
-        'logged_user': logged_user,
-        'recent_reports': recent_reports,
-        'total_reports': total_reports,
-        'verified_reports': verified_reports,
-        'top_contributors': top_contributors,
+        "logged_user": logged_user,
+        "recent_reports": recent_reports,
+        "total_reports": total_reports,
+        "verified_reports": verified_reports,
+        "top_contributors": top_contributors,
     }
 
-    return render(request, 'webapp/home.html', context)
+    return render(request, "webapp/home.html", context)
+
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -374,3 +377,42 @@ def submit_report(request):
         return redirect('reports_list')
 
     return render(request, 'webapp/submit_report.html')
+
+
+# webapp/views.py
+from django.http import JsonResponse, HttpResponseServerError
+from .ml_model.predict import predict_report, get_model
+
+def classify_view(request):
+    try:
+        # ensure model present (optional); or call predict_report directly
+        _ = get_model()  
+        # TODO: build input_data from request
+        input_data = [[0.0, 1.0]]  # example
+        result = predict_report(input_data).tolist()
+        return JsonResponse({"ok": True, "result": result})
+    except FileNotFoundError as e:
+        return HttpResponseServerError(
+            "ML model not found. Please place 'report_model.h5' in webapp/ml_model/."
+        )
+
+
+def rewards_view(request):
+    user_id = request.COOKIES.get('user_id')
+    if not user_id:
+        return redirect('login')
+
+    user = User.objects.get(user_id=user_id)
+    rewards = Reward.objects.filter(is_active=True)
+    return render(request, 'webapp/rewards.html', {'rewards': rewards, 'user': user})
+
+
+# helpers.py or views.py
+def get_logged_user(request):
+    user_id = request.COOKIES.get("user_id")
+    if user_id:
+        try:
+            return User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return None
+    return None

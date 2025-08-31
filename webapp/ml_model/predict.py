@@ -1,19 +1,34 @@
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing import image
-import numpy as np
+# webapp/ml_model/predict.py
 import os
+from functools import lru_cache
 
-# Load model
-model_path = os.path.join(os.path.dirname(__file__), 'report_model.h5')
-model = load_model(model_path)
+# Use tf.keras so it matches your installed TensorFlow/Keras
+from tensorflow import keras
 
-# Class mapping
-class_labels = ['cutting','dumping','reclamation','damage','restoration']
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "report_model.h5")
 
-def predict_report(img_path):
-    img = image.load_img(img_path, target_size=(224,224))
-    img_array = image.img_to_array(img)/255.0
-    img_array = np.expand_dims(img_array, axis=0)
-    pred = model.predict(img_array)
-    pred_class = np.argmax(pred, axis=1)[0]
-    return class_labels[pred_class]
+@lru_cache(maxsize=1)
+def get_model():
+    """
+    Load the model once, on first use (not at import time).
+    Raises a clear error if the file is missing.
+    """
+    if not os.path.exists(MODEL_PATH):
+        raise FileNotFoundError(
+            f"ML model file missing at: {MODEL_PATH}\n"
+            f"Place 'report_model.h5' in this folder."
+        )
+    return keras.models.load_model(MODEL_PATH)
+
+def predict_report(input_data):
+    """
+    Your actual prediction function.
+    Update pre/post-processing as per your model.
+    """
+    model = get_model()
+    # Example: adapt this for your real input/output
+    import numpy as np
+    x = np.array(input_data, dtype="float32")
+    preds = model.predict(x)
+    return preds
