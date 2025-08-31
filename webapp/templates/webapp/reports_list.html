@@ -60,13 +60,20 @@
             {% endfor %}
         </div>
 
-        <!-- Links -->
-        <div class="rewards-links">
-            <a href="{% url 'leaderboard' %}" class="btn btn-outline">View Leaderboard</a>
-            <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
-        </div>
-    </div>
+      <!-- Links -->
+<div class="rewards-links">
+    {% if user.is_authenticated %}
+        <a href="{% url 'leaderboard' %}" class="btn btn-outline">View Leaderboard</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    {% else %}
+        <p>You must be logged in to claim rewards.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'signup' %}" class="btn btn-outline">Register</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+    {% endif %}
 </div>
+
 {% endblock %}
 
 <style>

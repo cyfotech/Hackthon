@@ -222,11 +222,22 @@ def submit_report(request):
 
     return render(request, 'webapp/submit_report.html')
 
-
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.shortcuts import render
-from .models import Report
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Report, Leaderboard, Reward, User, UserReward
+
+# ----------------------------
+# Helper
+# ----------------------------
+def get_logged_user(request):
+    user_id = request.COOKIES.get("user_id")
+    if user_id:
+        try:
+            return User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return None
+    return None
 
 # ----------------------------
 # Reports List
@@ -259,18 +270,17 @@ def reports_list(request):
         'status_filter': status_filter,
         'type_filter': type_filter,
         'search_query': search_query,
+        'logged_user': get_logged_user(request),   # ✅ added
     })
 
-from django.shortcuts import render, get_object_or_404
-from .models import Report
 
 def report_detail(request, report_id):
     report = get_object_or_404(Report, report_id=report_id)
-    return render(request, 'webapp/report_detail.html', {'report': report})
+    return render(request, 'webapp/report_detail.html', {
+        'report': report,
+        'logged_user': get_logged_user(request),   # ✅ added
+    })
 
-
-from django.shortcuts import render
-from .models import Leaderboard
 
 def leaderboard_view(request):
     leaderboard = Leaderboard.objects.order_by('-points')[:20]
@@ -278,13 +288,11 @@ def leaderboard_view(request):
     for idx, entry in enumerate(leaderboard, start=1):
         entry.rank = idx
         entry.save()
-    return render(request, 'webapp/leaderboard.html', {'leaderboard': leaderboard})
+    return render(request, 'webapp/leaderboard.html', {
+        'leaderboard': leaderboard,
+        'logged_user': get_logged_user(request),   # ✅ added
+    })
 
-
- # if you use a helper for cookie-based login
-
-from django.shortcuts import render
-from .models import Reward, User
 
 def rewards_view(request):
     user_id = request.COOKIES.get('user_id')
@@ -293,36 +301,36 @@ def rewards_view(request):
 
     user = User.objects.get(user_id=user_id)
     rewards = Reward.objects.filter(is_active=True)
-    return render(request, 'webapp/rewards.html', {'rewards': rewards, 'user': user})
+    return render(request, 'webapp/rewards.html', {
+        'rewards': rewards,
+        'user': user,
+        'logged_user': get_logged_user(request),   # ✅ added
+    })
 
-
-# webapp/views.py
-from django.shortcuts import render
 
 def profile_view(request):
-    # you can pass user info here later
-    return render(request, 'webapp/profile.html')
+    return render(request, 'webapp/profile.html', {
+        'logged_user': get_logged_user(request),   # ✅ added
+    })
 
-from django.shortcuts import render
 
 def about(request):
-    return render(request, 'webapp/about.html')
+    return render(request, 'webapp/about.html', {
+        'logged_user': get_logged_user(request),   # ✅ added
+    })
 
-from django.shortcuts import render
 
 def contact(request):
-    return render(request, 'webapp/contact.html')
+    return render(request, 'webapp/contact.html', {
+        'logged_user': get_logged_user(request),   # ✅ added
+    })
 
-
-# webapp/views.py
-from django.shortcuts import render
 
 def password_reset_view(request):
-    return render(request, "webapp/password_reset.html")
+    return render(request, "webapp/password_reset.html", {
+        'logged_user': get_logged_user(request),   # ✅ added
+    })
 
-
-from django.shortcuts import get_object_or_404, redirect
-from .models import Reward, User, UserReward
 
 def claim_reward(request, reward_id):
     user_id = request.COOKIES.get('user_id')
@@ -342,8 +350,7 @@ def claim_reward(request, reward_id):
         user.points -= reward.points_required
         user.save()
 
-    return redirect('rewards')  # or wherever you want to redirect
-
+    return redirect('rewards')
 
 # webapp/views.py
 import os
@@ -395,17 +402,24 @@ def classify_view(request):
         return HttpResponseServerError(
             "ML model not found. Please place 'report_model.h5' in webapp/ml_model/."
         )
-
-
 def rewards_view(request):
     user_id = request.COOKIES.get('user_id')
     if not user_id:
         return redirect('login')
 
-    user = User.objects.get(user_id=user_id)
-    rewards = Reward.objects.filter(is_active=True)
-    return render(request, 'webapp/rewards.html', {'rewards': rewards, 'user': user})
+    try:
+        logged_user = User.objects.get(user_id=user_id)
+    except User.DoesNotExist:
+        return redirect('login')
 
+    # Fetch only active rewards
+    rewards = Reward.objects.filter(is_active=True)
+
+    return render(request, 'webapp/rewards.html', {
+        'rewards': rewards,
+        'user': logged_user,       # still keep 'user' if other views depend on it
+        'logged_user': logged_user # explicit context variable for template
+    })
 
 # helpers.py or views.py
 def get_logged_user(request):

@@ -1,0 +1,1 @@
+web: gunicorn cyfotech12.wsgi

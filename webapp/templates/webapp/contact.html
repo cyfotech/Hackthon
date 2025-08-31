@@ -1,4 +1,5 @@
 {% extends 'webapp/base.html' %}
+
 {% load static %}
 {% block title %}Contact - Community Mangrove Watch{% endblock %}
 
@@ -11,25 +12,26 @@
             <p>We’d love to hear from you 🌱</p>
         </div>
 
+        
         <div class="contact-content">
             <!-- Contact Info -->
             <div class="contact-info slide-left">
                 <h2>Get In Touch</h2>
-                <div class="contact-item">
+                <div class="contact-item delay-1">
                     <i class="fas fa-envelope"></i>
                     <div>
                         <h4>Email</h4>
                         <p><a href="mailto:info@mangrovewatch.org">info@mangrovewatch.org</a></p>
                     </div>
                 </div>
-                <div class="contact-item">
+                <div class="contact-item delay-2">
                     <i class="fas fa-phone"></i>
                     <div>
                         <h4>Phone</h4>
                         <p><a href="tel:+15551234567">+1 (555) 123-4567</a></p>
                     </div>
                 </div>
-                <div class="contact-item">
+                <div class="contact-item delay-3">
                     <i class="fas fa-map-marker-alt"></i>
                     <div>
                         <h4>Address</h4>
@@ -39,7 +41,7 @@
             </div>
 
             <!-- Contact Form -->
-            <form class="contact-form slide-right" id="contactForm">
+            <form class="contact-form slide-right delay-2" id="contactForm">
                 <h2>Send Message</h2>
                 <div class="form-group">
                     <label for="name">Full Name</label>
@@ -74,7 +76,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 50px 20px;
+    padding: 40px 15px;
 }
 
 /* Main container */
@@ -112,13 +114,13 @@
     justify-content: space-between;
     gap: 50px;
     flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: stretch; /* makes both columns equal height */
 }
 
 /* Contact info */
 .contact-info {
     flex: 1;
-    min-width: 280px;
+    min-width: 300px;
 }
 .contact-info h2 {
     margin-bottom: 25px;
@@ -130,6 +132,9 @@
     align-items: flex-start;
     margin-bottom: 25px;
     gap: 15px;
+    opacity: 0;
+    transform: translateX(-40px);
+    animation: slideLeft 0.8s forwards;
 }
 .contact-item i {
     font-size: 1.6rem;
@@ -152,6 +157,9 @@
 .contact-form {
     flex: 1;
     min-width: 320px;
+    opacity: 0;
+    transform: translateX(40px);
+    animation: slideRight 0.8s forwards;
 }
 .contact-form h2 {
     margin-bottom: 25px;
@@ -211,26 +219,23 @@
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
 }
-.fade-in { animation: fadeIn 1s ease forwards; }
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.slide-left { animation: slideLeft 1s ease forwards; }
 @keyframes slideLeft {
-    from { opacity: 0; transform: translateX(-50px); }
     to { opacity: 1; transform: translateX(0); }
 }
-.slide-right { animation: slideRight 1s ease forwards; }
 @keyframes slideRight {
-    from { opacity: 0; transform: translateX(50px); }
     to { opacity: 1; transform: translateX(0); }
 }
+
+/* Staggered delays */
+.delay-1 { animation-delay: 0.2s !important; }
+.delay-2 { animation-delay: 0.4s !important; }
+.delay-3 { animation-delay: 0.6s !important; }
 
 /* Responsive */
 @media (max-width: 768px) {
     .contact-content {
         flex-direction: column;
+        gap: 30px;
     }
 }
 </style>
@@ -244,7 +249,6 @@ document.getElementById("contactForm").addEventListener("submit", function(event
     status.textContent = "Sending...";
     status.style.color = "#2563eb";
 
-    // Fake send animation (replace with AJAX or backend later)
     setTimeout(() => {
         status.textContent = "Message sent successfully ✅";
         status.style.color = "#20c997";
